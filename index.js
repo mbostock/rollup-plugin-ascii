@@ -12,7 +12,7 @@ module.exports = function(options) {
     transform: function(code, id) {
       if (!filter(id) || extname(id) !== ".js") return;
 
-      var magic, ast;
+      var ast, magic;
 
       try {
         ast = acorn.parse(code, {ecmaVersion: 6, sourceType: "module"});
@@ -24,10 +24,12 @@ module.exports = function(options) {
       walk(ast, {
         enter: function(node, parent) {
           if (node.type === "Literal" && typeof node.value === "string") {
-            if (!magic) magic = new MagicString(code);
-            var quote = node.raw[0],
-                value = jsesc(node.value, {quotes: quote === "'" ? "single" : "double"});
-            magic.overwrite(node.start, node.end, quote + value + quote);
+            var raw0 = node.raw,
+                raw1 = jsesc(node.value, {wrap: true, quotes: raw0[0] === "'" ? "single" : "double"});
+            if (raw0 !== raw1) {
+              if (!magic) magic = new MagicString(code);
+              magic.overwrite(node.start, node.end, raw1);
+            }
           }
         }
       });
