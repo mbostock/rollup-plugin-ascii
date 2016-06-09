@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-ascii",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Rewrite JavaScript to escape any non-ASCII characters in string literals.",
   "keywords": [
     "rollup-plugin",
