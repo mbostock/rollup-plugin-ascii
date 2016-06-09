@@ -12,7 +12,7 @@ module.exports = function(options) {
     transform: function(code, id) {
       if (!filter(id) || extname(id) !== ".js") return;
 
-      var ast, magic;
+      var ast, magic = new MagicString(code), modified;
 
       try {
         ast = acorn.parse(code, {ecmaVersion: 6, sourceType: "module"});
@@ -23,18 +23,25 @@ module.exports = function(options) {
 
       walk(ast, {
         enter: function(node, parent) {
+          if (options.sourceMap) {
+            magic.addSourcemapLocation(node.start);
+            magic.addSourcemapLocation(node.end);
+          }
           if (node.type === "Literal" && typeof node.value === "string") {
             var raw0 = node.raw,
                 raw1 = jsesc(node.value, {wrap: true, quotes: raw0[0] === "'" ? "single" : "double"});
             if (raw0 !== raw1) {
-              if (!magic) magic = new MagicString(code);
+              modified = true;
               magic.overwrite(node.start, node.end, raw1);
             }
           }
         }
       });
 
-      return magic && {code: magic.toString()};
+      return modified && {
+        code: magic.toString(),
+        map: options.sourceMap && magic.generateMap()
+      };
     }
   };
 };
