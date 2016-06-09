@@ -7,7 +7,8 @@ var acorn = require("acorn"),
 
 module.exports = function(options) {
   if (options == null) options = {};
-  var filter = createFilter(options.include, options.exclude);
+  var filter = createFilter(options.include, options.exclude),
+      map = options.sourceMap !== false;
   return {
     transform: function(code, id) {
       if (!filter(id) || extname(id) !== ".js") return;
@@ -23,7 +24,7 @@ module.exports = function(options) {
 
       walk(ast, {
         enter: function(node, parent) {
-          if (options.sourceMap) {
+          if (map) {
             magic.addSourcemapLocation(node.start);
             magic.addSourcemapLocation(node.end);
           }
@@ -40,7 +41,7 @@ module.exports = function(options) {
 
       return modified && {
         code: magic.toString(),
-        map: options.sourceMap && magic.generateMap()
+        map: map && magic.generateMap()
       };
     }
   };
