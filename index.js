@@ -8,6 +8,7 @@ var acorn = require("acorn"),
 module.exports = function(options) {
   if (options == null) options = {};
   var filter = createFilter(options.include, options.exclude);
+  var sourceMap = options.sourceMap !== false;
   return {
     transform: function(code, id) {
       if (!filter(id) || extname(id) !== ".js") return;
@@ -23,6 +24,10 @@ module.exports = function(options) {
 
       walk(ast, {
         enter: function(node, parent) {
+          if (sourceMap) {
+            magic.addSourcemapLocation(node.start);
+            magic.addSourcemapLocation(node.end);
+          }
           if (node.type === "Literal" && typeof node.value === "string") {
             var raw0 = node.raw,
                 raw1 = jsesc(node.value, {wrap: true, quotes: raw0[0] === "'" ? "single" : "double"});
@@ -34,7 +39,7 @@ module.exports = function(options) {
         }
       });
 
-      return magic && {code: magic.toString()};
+      return magic && {code: magic.toString(), map: sourceMap ? magic.generateMap() : null};
     }
   };
 };
