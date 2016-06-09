@@ -1,0 +1,30 @@
+{
+  "name": "rollup-plugin-ascii",
+  "version": "0.0.0",
+  "description": "Rewrite JavaScript to escape any non-ASCII characters in string literals.",
+  "keywords": [
+    "rollup-plugin",
+    "ascii"
+  ],
+  "homepage": "https://github.com/mbostock/rollup-plugin-ascii",
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Mike Bostock",
+    "url": "https://bost.ocks.org/mike"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mbostock/rollup-plugin-ascii.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "postpublish": "git push && git push --tags"
+  },
+  "dependencies": {
+    "acorn": "^3.2.0",
+    "estree-walker": "^0.2.1",
+    "jsesc": "^2.2.0",
+    "magic-string": "^0.15.1",
+    "rollup-pluginutils": "^1.5.0"
+  }
+}
