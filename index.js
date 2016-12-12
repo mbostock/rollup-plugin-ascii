@@ -11,7 +11,7 @@ module.exports = function(options) {
       map = options.sourceMap !== false;
   return {
     transform: function(code, id) {
-      if (!filter(id) || extname(id) !== ".js") return;
+      if (!filter(id) || extname(id) !== ".ts") return;
 
       var ast, magic = new MagicString(code), modified;
 
