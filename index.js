@@ -10,9 +10,7 @@ module.exports = function(options) {
   var filter = createFilter(options.include, options.exclude),
       map = options.sourceMap !== false;
   return {
-    transform: function(code, id) {
-      if (!filter(id) || extname(id) !== ".js") return;
-
+    transformBundle: function(code) {
       var ast, magic = new MagicString(code), modified;
 
       try {
