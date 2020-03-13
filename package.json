@@ -21,7 +21,7 @@
     "postpublish": "git push && git push --tags"
   },
   "dependencies": {
-    "acorn": "^3.2.0",
+    "acorn": "^7.1.1",
     "estree-walker": "^0.2.1",
     "jsesc": "^2.2.0",
     "magic-string": "^0.15.1",
